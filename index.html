@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MENA Music Market Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --background: #0e0c17;
+            --foreground: hsl(210, 10%, 97%);
+            --card: rgba(26, 23, 39, 0.6);
+            --card-foreground: hsl(210, 10%, 97%);
+            --muted-foreground: hsl(215, 15%, 75%);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(174, 126, 246, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 50%, rgba(247, 142, 189, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(255, 172, 118, 0.08) 1px, transparent 1px);
+            background-size: 100px 100px, 80px 80px, 120px 120px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+            }
+            50% { 
+                transform: translateY(-20px) rotate(180deg); 
+            }
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            position: relative;
+            border-radius: 1.5rem; /* Increased border-radius for a softer look */
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(174, 126, 246, 0.1), 0 10px 10px -5px rgba(174, 126, 246, 0.05);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(174, 126, 246, 0.03) 0%, rgba(247, 142, 189, 0.02) 50%, rgba(255, 172, 118, 0.01) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .gradient-text {
+            background: linear-gradient(142deg, rgba(174, 126, 246, 1) 0%, rgba(247, 142, 189, 1) 37%, rgba(255, 172, 118, 1) 66%, rgba(247, 224, 89, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--muted-foreground);
+        }
+
+        .card-title {
+            color: var(--card-foreground);
+        }
+
+        .card-body {
+            color: var(--muted-foreground);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            color: var(--muted-foreground);
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--foreground);
+            text-shadow: 0 0 10px rgba(174, 126, 246, 0.5);
+            background-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(174, 126, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="particles"></div>
+    <nav class="navbar glass-card py-2 px-4 rounded-full">
+        <div class="container mx-auto flex items-center justify-center space-x-4 md:space-x-6">
+            <a href="#overview" class="nav-link text-sm font-medium px-3 py-2 rounded-full">Overview</a>
+            <a href="#insights" class="nav-link text-sm font-medium px-3 py-2 rounded-full">Insights</a>
+            <a href="#labels" class="nav-link text-sm font-medium px-3 py-2 rounded-full">Major Labels</a>
+            <a href="#dsps" class="nav-link text-sm font-medium px-3 py-2 rounded-full">DSPs</a>
+            <a href="#analysis" class="nav-link text-sm font-medium px-3 py-2 rounded-full">Analysis</a>
+            <a href="#conclusion" class="nav-link text-sm font-medium px-3 py-2 rounded-full">Conclusion</a>
+        </div>
+    </nav>
+    <main class="relative min-h-screen p-4 sm:p-6 md:p-8 pt-24">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <header class="text-center py-12 md:py-16">
+                <h1 class="gradient-text text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter">
+                    MENA's Music Boom
+                </h1>
+                <p class="mt-4 text-lg sm:text-xl max-w-3xl mx-auto" style="color: var(--muted-foreground);">
+                    Major Labels and Streaming Giants Vie for Dominance in a Rapidly Growing Market
+                </p>
+            </header>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+                
+                <!-- Introduction Card -->
+                <div id="overview" class="md:col-span-12 glass-card hover-lift p-6 md:p-8 scroll-mt-24">
+                    <h2 class="card-title text-2xl font-bold mb-4">Market Overview</h2>
+                    <p class="card-body leading-relaxed">
+                        The Middle East and North Africa (MENA) region has emerged as the world's fastest-growing music market, experiencing a meteoric rise driven by a young, digitally savvy population and the proliferation of streaming services. Since 2019, major international music labels and Digital Service Providers (DSPs) have significantly expanded their operations, vying for a strategic foothold in this burgeoning landscape. This report assesses the progress of these players, shaped by a complex interplay of localization, strategic partnerships, and adaptation to unique market dynamics.
+                    </p>
+                </div>
+
+                <!-- Charts Section -->
+                <div id="insights" class="md:col-span-12 text-center mt-8 mb-4 scroll-mt-24">
+                     <h2 class="text-3xl font-bold tracking-tight" style="color: var(--foreground);">Key Market Insights & Projections</h2>
+                </div>
+
+                <div class="md:col-span-12 lg:col-span-4 glass-card hover-lift p-6 flex flex-col">
+                    <h3 class="card-title text-xl font-semibold mb-3 text-center">Staggering Annual Growth (YoY)</h3>
+                    <div class="relative h-80">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="md:col-span-12 lg:col-span-4 glass-card hover-lift p-6 flex flex-col">
+                    <h3 class="card-title text-xl font-semibold mb-3 text-center">The Age of Streaming (2024)</h3>
+                    <div class="relative h-80">
+                        <canvas id="streamingShareChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="md:col-span-12 lg:col-span-4 glass-card hover-lift p-6 flex flex-col">
+                    <h3 class="card-title text-xl font-semibold mb-3 text-center">Future Market Trajectory (USD)</h3>
+                     <div class="relative h-80">
+                        <canvas id="revenueForecastChart"></canvas>
+                    </div>
+                </div>
+
+
+                <!-- Major Labels Section -->
+                <div id="labels" class="md:col-span-12 text-center mt-8 mb-4 scroll-mt-24">
+                     <h2 class="text-3xl font-bold tracking-tight" style="color: var(--foreground);">Major Labels: Deepening Local Roots</h2>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Universal Music Group (UMG)</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        UMG has been particularly bullish on the region, establishing a regional headquarters in Dubai and dedicated offices in key markets. Their strategy focuses on signing and developing local and regional artists, recognizing the immense popularity of Arabic music. UMG actively integrates its international catalog with a growing roster of local talent, fostering collaborations and cross-promotional opportunities.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Sony Music Entertainment</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        Sony has intensified its focus on the MENA region through strategic partnerships and signings. The label has been active in acquiring and partnering with prominent local music companies and artists. This approach allows them to leverage existing local expertise and artist rosters while providing the global reach and resources of a major label to tap into the region's diverse musical landscape.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Warner Music Group (WMG)</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        WMG has made significant strides by acquiring regional distributor Qanawat Music and investing in talent agency HuManagement. These moves underscore a clear intent to deepen its roots in the local ecosystem, providing WMG with enhanced distribution capabilities and direct access to a pipeline of emerging and established artists.
+                    </p>
+                </div>
+
+                <!-- DSPs Section -->
+                 <div id="dsps" class="md:col-span-12 text-center mt-8 mb-4 scroll-mt-24">
+                     <h2 class="text-3xl font-bold tracking-tight" style="color: var(--foreground);">Digital Service Providers: The Streaming Battleground</h2>
+                </div>
+                
+                <div class="md:col-span-6 lg:col-span-3 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Spotify</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        A dominant force, Spotify has invested heavily in localization, curating playlists for local tastes and launching initiatives to support emerging artists. Its brand recognition and user-friendly interface have driven widespread adoption.
+                    </p>
+                </div>
+
+                <div class="md:col-span-6 lg:col-span-3 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Anghami</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                       The leading homegrown platform, Anghami, remains a formidable competitor with a deep understanding of the regional music scene and a loyal user base, leveraging its early entry and focus on Arabic content.
+                    </p>
+                </div>
+                
+                <div class="md:col-span-6 lg:col-span-3 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Apple Music</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        Benefiting from its integration into the Apple ecosystem, Apple Music maintains a strong presence. It has made significant efforts to curate local content and playlists to cater to regional preferences.
+                    </p>
+                </div>
+
+                <div class="md:col-span-6 lg:col-span-3 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Deezer</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        Deezer has been active in the region by securing partnerships with local telecom operators to expand its reach, providing a viable path for growth even if it doesn't have the same market penetration as its rivals.
+                    </p>
+                </div>
+
+                <!-- Detailed Analysis Section -->
+                <div id="analysis" class="md:col-span-12 text-center mt-8 mb-4 scroll-mt-24">
+                    <h2 class="text-3xl font-bold tracking-tight" style="color: var(--foreground);">Detailed Analysis</h2>
+                </div>
+
+                <div class="md:col-span-12 glass-card hover-lift p-6 md:p-8">
+                    <h3 class="card-title text-xl font-semibold mb-3">The Future of Music in MENA (2025-2030)</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        The MENA music industry is entering a new era of explosive growth, poised to transition from a regional player to a vital force in the global music scene between 2025 and 2030. This transformation is driven by a convergence of technological innovation, strategic investment, and a profound shift in consumer behavior. A deep dive into the market growth expectations for the music industry in the MENA region from 2025 to 2030.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Digital Streaming: The Primary Growth Engine</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        Digital streaming will continue to be the dominant force, building on its current 95.5% share of total recorded music revenue. The next five years will see a sustained surge in paid subscriptions, with growth projected at a healthy 15% annually on a global scale. This is fueled by rising smartphone penetration and a young, digitally native population in the MENA region. The expansion of local-language repertoire and discovery of new talent by platforms will create a self-sustaining cycle of content creation and consumption.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Recorded Music: Beyond Borders</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        The recorded music sector will thrive as MENA-originated content gains international traction. Indicators like Spotify's 40% annual increase in streams of MENA music outside the region since 2018 show a growing global appetite for this content. The strategic focus on strengthening music exports, supported by industry-wide cooperation and technological integration, will be a key driver for significant revenue increases and will establish the region's artists on the world stage.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card hover-lift p-6">
+                    <h3 class="card-title text-xl font-semibold mb-3">Live Performance: A New Era of Experience</h3>
+                    <p class="card-body text-sm leading-relaxed">
+                        Live performances are set for a major renaissance, evolving beyond traditional concerts. Significant government and private sector investment, exemplified by Saudi Arabia's allocation of over $64 billion to music and entertainment, is creating world-class entertainment hubs. The future of live music in the region will be defined by the integration of emerging technologies like AI and VR, creating immersive and interactive fan experiences that draw global audiences and drive new revenue streams.
+                    </p>
+                </div>
+
+
+                <!-- Conclusion Card -->
+                <div id="conclusion" class="md:col-span-12 glass-card hover-lift p-6 md:p-8 mt-8 scroll-mt-24">
+                    <h2 class="card-title text-2xl font-bold mb-4">Conclusion: A Dynamic & Evolving Market</h2>
+                    <p class="card-body leading-relaxed">
+                        The period since 2019 has been transformative for the MENA music industry. Major labels have moved beyond simple licensing to establish a tangible presence, actively investing in local talent and infrastructure. The streaming landscape, while competitive, indicates a healthy and growing market. Progress is not solely defined by market share but by the ability to navigate regional nuances, foster local talent, and contribute to the vibrant MENA music ecosystem. The coming years promise continued intense competition and innovation as global and regional players vie for a larger share of this exciting market.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <footer class="text-center py-8 mt-12">
+                <p class="text-sm" style="color: var(--muted-foreground);">
+                    Report Generated on September 9, 2025. All rights reserved.
+                </p>
+            </footer>
+        </div>
+    </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const chartTextColor = 'hsl(215, 15%, 75%)';
+    const gridColor = 'rgba(255, 255, 255, 0.1)';
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Active link highlighting on scroll
+    const sections = document.querySelectorAll('div[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+
+    // Chart 1: Growth Chart
+    const growthCtx = document.getElementById('growthChart').getContext('2d');
+    const growthChart = new Chart(growthCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2021', '2022', '2024'],
+            datasets: [{
+                label: 'YoY Growth %',
+                data: [34, 23.8, 22.8],
+                backgroundColor: (context) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+
+                    if (!chartArea) {
+                        return null;
+                    }
+                    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    gradient.addColorStop(0, 'rgba(124, 58, 237, 0.6)');
+                    gradient.addColorStop(0.5, 'rgba(192, 38, 211, 0.6)');
+                    gradient.addColorStop(1, 'rgba(236, 72, 153, 0.6)');
+                    return gradient;
+                },
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 1,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.raw + '%';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: chartTextColor,
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    grid: {
+                        color: gridColor
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: chartTextColor
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Chart 2: Streaming Share
+    const streamingShareCtx = document.getElementById('streamingShareChart').getContext('2d');
+    const streamingShareChart = new Chart(streamingShareCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Streaming', 'Other Formats'],
+            datasets: [{
+                data: [99.5, 0.5],
+                backgroundColor: [
+                    'rgba(168, 85, 247, 0.8)',
+                    'rgba(255, 255, 255, 0.1)'
+                ],
+                borderColor: [
+                     'rgba(168, 85, 247, 1)',
+                     'rgba(255, 255, 255, 0.2)'
+                ],
+                borderWidth: 1,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: chartTextColor
+                    }
+                },
+                tooltip: {
+                     callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Chart 3: Revenue Forecast
+    const revenueForecastCtx = document.getElementById('revenueForecastChart').getContext('2d');
+    const revenueForecastChart = new Chart(revenueForecastCtx, {
+        type: 'line',
+        data: {
+            labels: ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+            datasets: [{
+                label: 'Projected Revenue (Millions)',
+                data: [117, 131, 144, 185, 250, 310, 365, 420, 484], // Data based on reports and projections
+                fill: true,
+                backgroundColor: (context) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+
+                    if (!chartArea) {
+                        return null;
+                    }
+                    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    gradient.addColorStop(0, 'rgba(139, 92, 246, 0)');
+                    gradient.addColorStop(1, 'rgba(139, 92, 246, 0.4)');
+                    return gradient;
+                },
+                borderColor: 'rgba(168, 85, 247, 1)',
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+                pointBorderColor: '#fff',
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(168, 85, 247, 1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': $' + context.raw + 'M';
+                        }
+                    }
+                }
+            },
+            scales: {
+                 y: {
+                    beginAtZero: false,
+                    ticks: {
+                        color: chartTextColor,
+                        callback: function(value) {
+                            return '$' + value + 'M';
+                        }
+                    },
+                    grid: {
+                        color: gridColor
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: chartTextColor
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
