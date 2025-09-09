@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Evaluation Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0c10;
+            color: #e0e7ff;
+            line-height: 1.6;
+        }
+        .text-golden-gradient {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-golden-gradient {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+        .page-content {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .animated-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.8s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-button {
+            transition: transform 0.2s ease-in-out;
+        }
+        .nav-button:hover {
+            transform: scale(1.05);
+        }
+        .active-nav-button {
+            background: linear-gradient(45deg, #3949f6, #60a5fa);
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3949f6;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+        #loading-indicator {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3949f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-8 md:p-12">
+
+    <!-- Header & Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#0b0c10] bg-opacity-95 backdrop-blur-sm shadow-xl rounded-b-xl px-8 py-4">
+        <nav class="flex justify-between items-center max-w-7xl mx-auto">
+            <div class="text-2xl font-bold text-dark-blue">
+                <span class="text-golden-gradient">Business</span> Evaluation
+            </div>
+            <ul class="flex space-x-4 md:space-x-8">
+                <li><button id="nav-page1" onclick="showPage('page1')" class="nav-button active-nav-button text-gray-400 hover:text-white transition-colors duration-300">Overview</button></li>
+                <li><button id="nav-page2" onclick="showPage('page2')" class="nav-button text-gray-400 hover:text-white transition-colors duration-300">Financial Health</button></li>
+                <li><button id="nav-page3" onclick="showPage('page3')" class="nav-button text-gray-400 hover:text-white transition-colors duration-300">Growth & Projections</button></li>
+                <li><button id="nav-page4" onclick="showPage('page4')" class="nav-button text-gray-400 hover:text-white transition-colors duration-300">Valuation & Strategy</button></li>
+                <li><button id="nav-page5" onclick="showPage('page5')" class="nav-button text-gray-400 hover:text-white transition-colors duration-300">Knowledge Base</button></li>
+                <li><button id="nav-page6" onclick="showPage('page6')" class="nav-button text-gray-400 hover:text-white transition-colors duration-300">Detailed Analysis</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page 1: Overview -->
+    <main id="page1" class="page-content active mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">Financial Snapshot</span> and Outlook
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    A quick glance at the company's performance, highlighting key trends and financial health indicators over the past three years.
+                </p>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Stat Card: 2024 Revenue -->
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg border-t-4 border-dark-blue animated-text" style="animation-delay: 0.3s;">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-8 h-8 mr-3 text-golden-gradient" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5 8a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-2a1 1 0 011-1h1a1 1 0 001-1V9a1 1 0 00-1-1H5a1 1 0 01-1-1V5a1 1 0 011-1h1a1 1 0 001-1V5a1 1 0 01-1-1zM10 12a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-1a1 1 0 00-1 1v3a1 1 0 01-1 1h-1a1 1 0 01-1-1v-2a1 1 0 011-1h1a1 1 0 001-1V13a1 1 0 00-1-1h-1a1 1 0 01-1-1z"/></svg>
+                        <h3 class="text-xl font-semibold">2024 Revenue</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-white animated-text" style="animation-delay: 0.4s;">$8.99M</p>
+                    <p class="text-sm text-gray-400">up 25% from 2023</p>
+                </div>
+
+                <!-- Stat Card: 2024 Net Income -->
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg border-t-4 border-dark-blue animated-text" style="animation-delay: 0.5s;">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-8 h-8 mr-3 text-golden-gradient" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 5a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM9 9a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM9 13a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 7a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1V7zM7 11a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1zM7 15a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1z"/></svg>
+                        <h3 class="text-xl font-semibold">2024 Net Income</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-white animated-text" style="animation-delay: 0.6s;">$1.86M</p>
+                    <p class="text-sm text-gray-400">up 43% from 2023</p>
+                </div>
+
+                <!-- Stat Card: Gross Profit Margin -->
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg border-t-4 border-dark-blue animated-text" style="animation-delay: 0.7s;">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-8 h-8 mr-3 text-golden-gradient" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 7a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1V7zM7 11a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1zM7 15a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1z"/></svg>
+                        <h3 class="text-xl font-semibold">Gross Profit Margin</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-white animated-text" style="animation-delay: 0.8s;">27.4%</p>
+                    <p class="text-sm text-gray-400">in 2024</p>
+                </div>
+
+                <!-- Stat Card: 2024 EBITDA -->
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg border-t-4 border-dark-blue animated-text stat-card-ebitda" style="animation-delay: 0.9s;">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-8 h-8 mr-3 text-golden-gradient" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 5a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM9 9a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM9 13a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 7a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1V7zM7 11a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1zM7 15a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1z"/></svg>
+                        <h3 class="text-xl font-semibold">2024 EBITDA</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-white animated-text" style="animation-delay: 1.0s;">$2.46M</p>
+                    <p class="text-sm text-gray-400">in 2024</p>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 1.1s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Revenue Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueBreakdownChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-4">This chart clearly illustrates the company's reliance on YouTube for the majority of its revenue. While this indicates a strong core business, the growing contribution from DSPs and Content Licensing suggests a healthy trend toward revenue diversification, which reduces risk and opens new growth channels.</p>
+                </div>
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 1.2s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Profitability Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="profitabilityTrendChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-4">The profitability trend shows a powerful rebound in 2024. After a dip in Gross Profit and Net Income in 2023, the company has successfully reversed the trend, achieving a record Net Income. This indicates effective cost management and a return to strong financial health.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Page 2: Financial Health -->
+    <main id="page2" class="page-content mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">In-Depth</span> Financial Analysis
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    An examination of the company's financial health, including a detailed look at revenue streams, expenses, and profitability margins.
+                </p>
+            </section>
+
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.3s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Revenue & Growth Trajectory</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueGrowthChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-4">This chart provides a detailed look at the company's recent revenue performance. The negative growth in 2023 was a temporary setback, likely due to market factors. The strong 25% growth in 2024 confirms a significant recovery and renewed momentum, making the business more attractive to investors.</p>
+                    <button onclick="generateInsight('growth')" class="mt-4 w-full bg-[#3949f6] text-white py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-200">✨ Generate Insight</button>
+                </div>
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Operating Expenses Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="opexBreakdownChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-4">This breakdown shows that the company has been highly effective at managing its operational costs, particularly Payroll, which has decreased from 2022 to 2024. This trend highlights a maturing and efficient business model that can scale revenue without a proportional increase in expenses, leading to improved profitability.</p>
+                </div>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.5s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Key Financial Ratios</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left rounded-lg overflow-hidden">
+                        <thead class="bg-dark-blue-light">
+                            <tr class="bg-dark-blue">
+                                <th class="p-4 rounded-tl-lg">Indicator</th>
+                                <th class="p-4">2022</th>
+                                <th class="p-4">2023</th>
+                                <th class="p-4 rounded-tr-lg">2024</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-4">Gross Profit Margin</td>
+                                <td class="p-4">29.3%</td>
+                                <td class="p-4">26.3%</td>
+                                <td class="p-4">27.4%</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="p-4">Net Profit Margin</td>
+                                <td class="p-4">19.1%</td>
+                                <td class="p-4">18.1%</td>
+                                <td class="p-4">20.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4">OpEx as % of Revenue</td>
+                                <td class="p-4">10.2%</td>
+                                <td class="p-4">8.2%</td>
+                                <td class="p-4">6.7%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Page 3: Growth & Projections -->
+    <main id="page3" class="page-content mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">Growth</span> & Future Projections
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    This section analyzes the historical growth trajectory and provides realistic financial projections based on past performance and industry trends.
+                </p>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg mb-12 animated-text" style="animation-delay: 0.3s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Historical Revenue Growth (2014-2024)</h3>
+                <div class="chart-container">
+                    <canvas id="historicalGrowthChart"></canvas>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">The company has shown a long-term pattern of strong, consistent revenue growth since 2014. While there have been some fluctuations, the overall trend is a classic growth curve, demonstrating the company’s ability to capture and expand its market presence over the last decade.</p>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg mb-12 animated-text" style="animation-delay: 0.4s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Revenue Projection: 2025-2027</h3>
+                <div class="chart-container">
+                    <canvas id="revenueProjectionChart"></canvas>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">Based on the recent 25% growth in 2024, this projection provides a realistic view of future revenue. The consistent increase highlights the company's continued upward trajectory, projecting a future of sustained growth and solidifies its position as a strong investment.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Page 4: Valuation & Strategy -->
+    <main id="page4" class="page-content mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">Valuation</span> & Strategic Recommendations
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    A summary of the company's valuation, key strategic takeaways, and actionable recommendations to support your decision-making process.
+                </p>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.3s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Fair Valuation Range</h3>
+                    <p class="text-5xl font-extrabold text-white mb-2">$20M - $25M</p>
+                    <p class="text-sm text-gray-400">Based on a 2.2x - 2.8x revenue multiple, aligned with a 25% growth rate and strong profitability.</p>
+                </div>
+                <div class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Strategic Recommendation</h3>
+                    <p class="text-lg text-gray-300">
+                        The company demonstrates a healthy and improving financial profile. The **decline in OpEx as a percentage of revenue** is a strong indicator of operational efficiency. The recommendation is to **consider this as a strong investment opportunity, with a focus on negotiation within the established valuation range.**
+                    </p>
+                </div>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.5s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Key Takeaways</h3>
+                <ul class="list-disc list-inside space-y-4 text-gray-300">
+                    <li>
+                        <p><span class="font-bold">Operational Efficiency:</span> The continued reduction in Operating Expenses (OpEx) as a percentage of total revenue is a powerful sign of a maturing and highly efficient business model. This shows the company can scale its operations without a proportional increase in costs, leading to wider profit margins and a healthier bottom line. This is a critical factor for long-term value creation.</p>
+                    </li>
+                    <li>
+                        <p><span class="font-bold">Strong Profitability:</span> The substantial growth in Net Income in 2024 is not just a recovery from the 2023 dip; it's a statement of financial resilience. The company is proving its ability to turn top-line growth into bottom-line profit, which is the ultimate goal of any business and a key indicator for potential investors.</p>
+                    </li>
+                    <li>
+                        <p><span class="font-bold">Diversification Opportunity:</span> While YouTube remains the primary revenue driver, the rapid growth in revenues from Digital Streaming Services (DSPs) and Content Licensing is a strategic win. This trend reduces the company's reliance on a single platform, mitigating risk and creating new, sustainable revenue streams. It shows the company is successfully adapting to a dynamic market.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-6 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.6s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">Leveraging the MENA Market Advantage</h3>
+                <ul class="list-disc list-inside space-y-4 text-gray-300">
+                    <li>
+                        <p><span class="font-bold">Record-Breaking Growth:</span> The MENA region's music revenue grew by a remarkable 22.8% in 2024. As an active participant in this market, the company is directly benefiting from and contributing to this rapid expansion, which justifies a higher growth multiple in its valuation.</p>
+                    </li>
+                    <li>
+                        <p><span class="font-bold">Streaming Dominance:</span> With streaming accounting for 95.5% of total music revenues in the region, the company's success on platforms like YouTube and DSPs places it directly at the heart of the fastest-growing market trend. This strong digital presence is a powerful asset for valuation.</p>
+                    </li>
+                    <li>
+                        <p><span class="font-bold">Global Engagement:</span> The reported 40% annual increase in streams of MENA-originated music outside the region shows that the company's content has a growing global appeal beyond the local diaspora. This opens up new, untapped international markets and justifies a premium valuation.</p>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- Page 5: Knowledge Base -->
+    <main id="page5" class="page-content mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">Knowledge</span> Base
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    A quick reference guide for all the key financial and operational terms used in this report.
+                </p>
+            </section>
+
+            <section class="bg-dark-blue bg-opacity-30 p-8 rounded-2xl shadow-lg animated-text" style="animation-delay: 0.3s;">
+                <ul class="list-disc list-inside space-y-4 text-gray-300">
+                    <li><p><span class="font-bold">Total Revenues:</span> The sum of all generated and collected incomes.</p></li>
+                    <li><p><span class="font-bold">Revenues - YouTube:</span> The sum of all generated and collected from the YouTube platform.</p></li>
+                    <li><p><span class="font-bold">Revenues - DSPs:</span> The sum of all generated and collected from Digital Streaming Platforms (DSPs), which are services like Spotify, Apple Music, etc., excluding YouTube.</p></li>
+                    <li><p><span class="font-bold">Revenues - Content Licensing:</span> The sum of all generated and collected from licensing services, where the company's content is licensed for use by others.</p></li>
+                    <li><p><span class="font-bold">Revenues - Facebook Ent.:</span> The sum of all generated and collected from the Facebook Entertainment Platform.</p></li>
+                    <li><p><span class="font-bold">Cost of Goods Sold (COGS):</span> The direct costs attributable to the production of the goods or services sold by a company. In this case, it's the sum of all content costs and shares paid to rights holders.</p></li>
+                    <li><p><span class="font-bold">Gross Profit:</span> The company's financial gain after deducting the Cost of Goods Sold (COGS) from Total Revenues.</p></li>
+                    <li><p><span class="font-bold">Operating Expenses (OpEx):</span> The ongoing costs of running a business's day-to-day operations, such as rent, salaries, utilities, and marketing expenses.</p></li>
+                    <li><p><span class="font-bold">Payroll:</span> The sum of annual amounts paid to a company's staff.</p></li>
+                    <li><p><span class="font-bold">Tech/Platform Maintenance:</span> The expenses for updating and enhancing the company's delivery platform.</p></li>
+                    <li><p><span class="font-bold">Rent:</span> The annual expense for renting business properties or spaces.</p></li>
+                    <li><p><span class="font-bold">General & Admin (G&A):</span> The sum of all necessary costs to maintain a company's daily operations and administer its business, not including expenses directly related to a product or service.</p></li>
+                    <li><p><span class="font-bold">Net Income:</span> The final company profit after deducting all operating and non-operating expenses, as well as taxes, from total revenue.</p></li>
+                    <li><p><span class="font-bold">DSPs (Digital Streaming Platforms):</span> The streaming platforms that distribute content, such as Spotify, Apple Music, and Amazon Music.</p></li>
+                    <li><p><span class="font-bold">EBITDA (Earnings Before Interest, Taxes, Depreciation, and Amortization):</span> A measure of a company's overall financial performance and is used as an alternative to simple earnings or net income in some circumstances.</p></li>
+                </ul>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Page 6: Detailed Analysis -->
+    <main id="page6" class="page-content mt-24">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 animated-text" style="animation-delay: 0.1s;">
+                    <span class="text-golden-gradient">Detailed</span> Analysis
+                </h1>
+                <p class="text-lg text-gray-300 animated-text" style="animation-delay: 0.2s;">
+                    A deep dive into the market growth expectations for the music industry in the MENA region from 2025 to 2030.
+                </p>
+            </section>
+            
+            <section id="analysisOutput" class="bg-dark-blue bg-opacity-30 p-8 rounded-2xl shadow-lg mt-10 animated-text" style="animation-delay: 0.4s;">
+                <h3 class="text-2xl font-bold mb-4 text-golden-gradient">The Future of Music in MENA (2025-2030)</h3>
+                <p class="text-gray-200 whitespace-pre-wrap">The MENA music industry is entering a new era of explosive growth, poised to transition from a regional player to a vital force in the global music scene between 2025 and 2030. This transformation is driven by a convergence of technological innovation, strategic investment, and a profound shift in consumer behavior.</p>
+
+                <h4 class="text-xl font-semibold mt-6 mb-2 text-golden-gradient">Digital Streaming: The Primary Growth Engine</h4>
+                <p class="text-gray-200 whitespace-pre-wrap">Digital streaming will continue to be the dominant force, building on its current 95.5% share of total recorded music revenue. The next five years will see a sustained surge in paid subscriptions, with growth projected at a healthy 15% annually on a global scale. This is fueled by rising smartphone penetration and a young, digitally native population in the MENA region. The expansion of local-language repertoire and discovery of new talent by platforms will create a self-sustaining cycle of content creation and consumption.</p>
+
+                <h4 class="text-xl font-semibold mt-6 mb-2 text-golden-gradient">Recorded Music: Beyond Borders</h4>
+                <p class="text-gray-200 whitespace-pre-wrap">The recorded music sector will thrive as MENA-originated content gains international traction. Indicators like Spotify's 40% annual increase in streams of MENA music outside the region since 2018 show a growing global appetite for this content. The strategic focus on strengthening music exports, supported by industry-wide cooperation and technological integration, will be a key driver for significant revenue increases and will establish the region's artists on the world stage.</p>
+
+                <h4 class="text-xl font-semibold mt-6 mb-2 text-golden-gradient">Live Performance: A New Era of Experience</h4>
+                <p class="text-gray-200 whitespace-pre-wrap">Live performances are set for a major renaissance, evolving beyond traditional concerts. Significant government and private sector investment, exemplified by Saudi Arabia's allocation of over $64 billion to music and entertainment, is creating world-class entertainment hubs. The future of live music in the region will be defined by the integration of emerging technologies like AI and VR, creating immersive and interactive fan experiences that draw global audiences and drive new revenue streams.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="fixed bottom-0 left-0 right-0 z-50 bg-[#0b0c10] bg-opacity-95 backdrop-blur-sm shadow-inner rounded-t-xl px-8 py-4">
+        <div class="flex justify-between items-center max-w-7xl mx-auto text-gray-400 text-sm">
+            <p>&copy; 2024 Business Evaluator. All rights reserved.</p>
+            <p>Generated on <span id="currentDate"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
+
+            const financialData = {
+                '2022': {
+                    'Total Revenues': 7799711,
+                    'Revenues - YouTube': 6373291,
+                    'Revenues - DSPs': 1266733,
+                    'Revenues - Content Licensing': 0,
+                    'Revenues - Facebook Ent.': 159687,
+                    'Cost of Goods Sold (COGS)': 5514096,
+                    'Gross Profit': 2285615,
+                    'Operating Expenses (OpEx)': 798908,
+                    'Payroll': 584478,
+                    'Tech/Platform Maintenance': 40381,
+                    'Rent': 43000,
+                    'General & Admin (G&A)': 131048,
+                    'Net Income': 1486707
+                },
+                '2023': {
+                    'Total Revenues': 7199881,
+                    'Revenues - YouTube': 5587800,
+                    'Revenues - DSPs': 1117296,
+                    'Revenues - Content Licensing': 235102,
+                    'Revenues - Facebook Ent.': 259683,
+                    'Cost of Goods Sold (COGS)': 5306094,
+                    'Gross Profit': 1893787,
+                    'Operating Expenses (OpEx)': 589273,
+                    'Payroll': 430911,
+                    'Tech/Platform Maintenance': 40381,
+                    'Rent': 43000,
+                    'General & Admin (G&A)': 74981,
+                    'Net Income': 1304514
+                },
+                '2024': {
+                    'Total Revenues': 8999576,
+                    'Revenues - YouTube': 6656321,
+                    'Revenues - DSPs': 1591791,
+                    'Revenues - Content Licensing': 588500,
+                    'Revenues - Facebook Ent.': 162965,
+                    'Cost of Goods Sold (COGS)': 6532505,
+                    'Gross Profit': 2467071,
+                    'Operating Expenses (OpEx)': 606545,
+                    'Payroll': 446930,
+                    'Tech/Platform Maintenance': 50171,
+                    'Rent': 47000,
+                    'General & Admin (G&A)': 62444,
+                    'Net Income': 1860526
+                }
+            };
+
+            const historicalData = {
+                '2014': 170000,
+                '2015': 322000,
+                '2016': 412075,
+                '2017': 858651,
+                '2018': 1412241,
+                '2019': 2569417,
+                '2020': 3304923,
+                '2021': 6046084,
+                '2022': 7799711,
+                '2023': 7199881,
+                '2024': 8999576,
+            };
+            
+            const ebitda = {
+                '2022': financialData['2022']['Gross Profit'] - financialData['2022']['Operating Expenses (OpEx)'],
+                '2023': financialData['2023']['Gross Profit'] - financialData['2023']['Operating Expenses (OpEx)'],
+                '2024': financialData['2024']['Gross Profit'] - financialData['2024']['Operating Expenses (OpEx)'],
+            };
+            document.querySelector('.stat-card-ebitda .text-3xl').textContent = `$${(ebitda['2024'] / 1000000).toFixed(2)}M`;
+
+            // Calculate projections
+            const avgGrowth = (Object.values(historicalData).slice(-3).reduce((acc, val, i, arr) => {
+                if (i > 0) {
+                    return acc + (val - arr[i-1]) / arr[i-1];
+                }
+                return acc;
+            }, 0) / 2) * 100;
+            
+            const growthRate = 0.25; // 25% based on 2024 growth
+            const projectedData = {
+                '2024': financialData['2024']['Total Revenues'],
+                '2025': financialData['2024']['Total Revenues'] * (1 + growthRate),
+                '2026': financialData['2024']['Total Revenues'] * (1 + growthRate) * (1 + growthRate),
+                '2027': financialData['2024']['Total Revenues'] * (1 + growthRate) * (1 + growthRate) * (1 + growthRate)
+            };
+
+            const formatCurrency = (value) => `$${(value / 1000000).toFixed(2)}M`;
+
+            // Chart Colors
+            const mainColor = '#3949f6'; // New blue color
+            const secondaryColor = '#ffa500'; // Golden
+            const gridColor = 'rgba(255, 255, 255, 0.1)';
+            const fontColor = '#ffffff'; // Lighter font color
+            const tooltipBg = '#1f2937';
+
+            // Chart Options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: true, // Explicitly enable animation
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: fontColor
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: tooltipBg,
+                        titleColor: fontColor,
+                        bodyColor: fontColor
+                    },
+                    datalabels: {
+                        color: fontColor,
+                        formatter: (value, context) => formatCurrency(value),
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: gridColor },
+                        ticks: { color: fontColor }
+                    },
+                    y: {
+                        grid: { color: gridColor },
+                        ticks: {
+                            color: fontColor,
+                            callback: (value) => formatCurrency(value)
+                        }
+                    }
+                }
+            };
+
+            // Page 1: Revenue Breakdown Chart
+            const ctx1 = document.getElementById('revenueBreakdownChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['YouTube', 'DSPs', 'Content Licensing', 'Facebook Ent.'],
+                    datasets: [{
+                        data: [
+                            financialData['2024']['Revenues - YouTube'],
+                            financialData['2024']['Revenues - DSPs'],
+                            financialData['2024']['Revenues - Content Licensing'],
+                            financialData['2024']['Revenues - Facebook Ent.']
+                        ],
+                        backgroundColor: [mainColor, '#10b981', '#f59e0b', '#ef4444'],
+                        borderColor: '#0b0c10',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: fontColor
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: tooltipBg,
+                            titleColor: fontColor,
+                            bodyColor: fontColor,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                    const percentage = (value / total * 100).toFixed(1);
+                                    return `${label}: ${formatCurrency(value)} (${percentage}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: fontColor,
+                            formatter: (value, context) => {
+                                const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return percentage > 5 ? `${percentage}%` : '';
+                            },
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Page 1: Profitability Trend Chart
+            const ctx2 = document.getElementById('profitabilityTrendChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2023', '2024'],
+                    datasets: [{
+                        label: 'Gross Profit',
+                        data: [
+                            financialData['2022']['Gross Profit'],
+                            financialData['2023']['Gross Profit'],
+                            financialData['2024']['Gross Profit']
+                        ],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Net Income',
+                        data: [
+                            financialData['2022']['Net Income'],
+                            financialData['2023']['Net Income'],
+                            financialData['2024']['Net Income']
+                        ],
+                        borderColor: mainColor,
+                        backgroundColor: 'rgba(57, 73, 246, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Page 2: Revenue & Growth Trajectory Chart
+            const ctx3 = document.getElementById('revenueGrowthChart').getContext('2d');
+            new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024'],
+                    datasets: [
+                        {
+                            label: 'Total Revenues',
+                            data: [
+                                financialData['2022']['Total Revenues'],
+                                financialData['2023']['Total Revenues'],
+                                financialData['2024']['Total Revenues']
+                            ],
+                            backgroundColor: mainColor,
+                            borderColor: mainColor,
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Growth',
+                            data: [
+                                (financialData['2022']['Total Revenues'] - historicalData['2021']) / historicalData['2021'] * 100,
+                                (financialData['2023']['Total Revenues'] - financialData['2022']['Total Revenues']) / financialData['2022']['Total Revenues'] * 100,
+                                (financialData['2024']['Total Revenues'] - financialData['2023']['Total Revenues']) / financialData['2023']['Total Revenues'] * 100
+                            ],
+                            backgroundColor: 'rgba(245, 158, 11, 0.6)',
+                            borderColor: '#f59e0b',
+                            type: 'line',
+                            yAxisID: 'y1',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: fontColor
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: tooltipBg,
+                            titleColor: fontColor,
+                            bodyColor: fontColor,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label === 'Total Revenues') {
+                                        return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                                    } else {
+                                        return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}%`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: fontColor,
+                                callback: (value) => formatCurrency(value)
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            ticks: {
+                                color: fontColor,
+                                callback: (value) => `${value.toFixed(0)}%`
+                            }
+                        },
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: fontColor }
+                        }
+                    }
+                }
+            });
+            
+            // Page 2: OpEx Breakdown Chart
+            const ctx4 = document.getElementById('opexBreakdownChart').getContext('2d');
+            new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024'],
+                    datasets: [
+                        {
+                            label: 'Payroll',
+                            data: [financialData['2022']['Payroll'], financialData['2023']['Payroll'], financialData['2024']['Payroll']],
+                            backgroundColor: mainColor
+                        },
+                        {
+                            label: 'Tech/Platform',
+                            data: [financialData['2022']['Tech/Platform Maintenance'], financialData['2023']['Tech/Platform Maintenance'], financialData['2024']['Tech/Platform Maintenance']],
+                            backgroundColor: '#10b981'
+                        },
+                        {
+                            label: 'Rent',
+                            data: [financialData['2022']['Rent'], financialData['2023']['Rent'], financialData['2024']['Rent']],
+                            backgroundColor: '#f59e0b'
+                        },
+                        {
+                            label: 'G&A',
+                            data: [financialData['2022']['General & Admin (G&A)'], financialData['2023']['General & Admin (G&A)'], financialData['2024']['General & Admin (G&A)']],
+                            backgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { color: gridColor },
+                            ticks: { color: fontColor }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: fontColor,
+                                callback: (value) => `$${(value / 1000).toFixed(0)}k`
+                            }
+                        }
+                    },
+                    plugins: {
+                         legend: {
+                            labels: {
+                                color: fontColor
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: tooltipBg,
+                            titleColor: fontColor,
+                            bodyColor: fontColor,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.y;
+                                    return `${label}: $${(value/1000).toFixed(0)}k`;
+                                }
+                            }
+                        },
+                         datalabels: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Page 3: Historical Revenue Growth Chart
+            const ctx5 = document.getElementById('historicalGrowthChart').getContext('2d');
+            const years = Object.keys(historicalData);
+            const revenues = Object.values(historicalData);
+            new Chart(ctx5, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Total Revenues ($)',
+                        data: revenues,
+                        borderColor: mainColor,
+                        backgroundColor: 'rgba(57, 73, 246, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Page 3: Revenue Projection Chart
+            const ctx6 = document.getElementById('revenueProjectionChart').getContext('2d');
+            const projectionLabels = Object.keys(projectedData);
+            const projectionValues = Object.values(projectedData);
+            new Chart(ctx6, {
+                type: 'bar',
+                data: {
+                    labels: projectionLabels,
+                    datasets: [{
+                        label: 'Projected Revenues ($)',
+                        data: projectionValues,
+                        backgroundColor: (context) => {
+                            if (context.dataIndex < 1) { // 2024 is historical
+                                return mainColor;
+                            }
+                            return '#ffa500'; // Projected years
+                        },
+                        borderColor: (context) => {
+                             if (context.dataIndex < 1) {
+                                return mainColor;
+                            }
+                            return '#ffa500';
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Page handling and animation
+            const pages = document.querySelectorAll('.page-content');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const showPage = (id) => {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                navButtons.forEach(button => {
+                    button.classList.remove('active-nav-button');
+                });
+                document.getElementById(id).classList.add('active');
+                document.getElementById(`nav-${id}`).classList.add('active-nav-button');
+                
+                document.querySelectorAll('.animated-text').forEach(el => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; // Trigger reflow
+                    el.style.animation = null;
+                });
+            };
+            window.showPage = showPage;
+            
+            // Gemini API Call Function
+            const runAnalysis = async () => {
+                const prompt = document.getElementById('analysisPrompt').value;
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                const analyzeButton = document.getElementById('analyzeButton');
+                const analysisOutput = document.getElementById('analysisOutput');
+                const analysisText = document.getElementById('analysisText');
+
+                if (!prompt) {
+                    analysisText.textContent = "Please enter a prompt to generate an analysis.";
+                    analysisOutput.style.display = 'block';
+                    return;
+                }
+
+                loadingIndicator.style.display = 'flex';
+                analysisOutput.style.display = 'none';
+                analyzeButton.disabled = true;
+                analysisText.textContent = '';
+                
+                try {
+                    const promptText = `
+                        As a business analyst, provide a detailed and insightful narrative based on the following financial data. Do not use Markdown headings in your response. Focus on trends, implications, and strategic takeaways.
+
+                        Company's financial data for 2022, 2023, and 2024:
+                        - Total Revenues: 2022: $7,799,711; 2023: $7,199,881; 2024: $8,999,576
+                        - Revenues - YouTube: 2022: $6,373,291; 2023: $5,587,800; 2024: $6,656,321
+                        - Revenues - DSPs: 2022: $1,266,733; 2023: $1,117,296; 2024: $1,591,791
+                        - Revenues - Content Licensing: 2022: $0; 2023: $235,102; 2024: $588,500
+                        - Gross Profit: 2022: $2,285,615; 2023: $1,893,787; 2024: $2,467,071
+                        - Operating Expenses (OpEx): 2022: $798,908; 2023: $589,273; 2024: $606,545
+                        - Net Income: 2022: $1,486,707; 2023: $1,304,514; 2024: $1,860,526
+                        
+                        - Long-term revenue trend: The company has shown consistent growth from 2014 to 2024, with a slight dip in 2023 followed by a strong rebound in 2024.
+                        - Revenue diversification: YouTube is the primary revenue source, but DSPs and Content Licensing are showing significant growth.
+
+                        Based on the above data, ${prompt}
+                    `;
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: promptText }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const fetchWithRetry = async (url, options, retries = 3) => {
+                        try {
+                            const response = await fetch(url, options);
+                            if (response.status === 429 && retries > 0) {
+                                const delay = Math.pow(2, 3 - retries) * 1000 + Math.random() * 1000;
+                                await new Promise(res => setTimeout(res, delay));
+                                return fetchWithRetry(url, options, retries - 1);
+                            }
+                            return response;
+                        } catch (error) {
+                            if (retries > 0) {
+                                const delay = Math.pow(2, 3 - retries) * 1000 + Math.random() * 1000;
+                                await new Promise(res => setTimeout(res, delay));
+                                return fetchWithRetry(url, options, retries - 1);
+                            }
+                            throw error;
+                        }
+                    };
+
+                    const response = await fetchWithRetry(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        analysisText.textContent = text;
+                    } else {
+                        analysisText.textContent = "Error generating analysis. Please try again.";
+                    }
+                } catch (error) {
+                    console.error('Error fetching from Gemini API:', error);
+                    analysisText.textContent = `An error occurred: ${error.message}.`;
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                    analysisOutput.style.display = 'block';
+                    analyzeButton.disabled = false;
+                    showPage('page6');
+                }
+            };
+            window.runAnalysis = runAnalysis;
+
+            window.generateInsight = (type) => {
+                if (type === 'growth') {
+                    document.getElementById('analysisPrompt').value = "Analyze the company's revenue and growth trajectory from 2022 to 2024. Explain the key factors that contributed to the trends and what they imply about the company's future prospects.";
+                    runAnalysis();
+                }
+            };
+
+
+            // Set current date
+            const date = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-US', options);
+        });
+    </script>
+</body>
+</html>
